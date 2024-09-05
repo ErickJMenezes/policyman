@@ -33,6 +33,8 @@
         }
     },
     "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
+        "test": "vendor/bin/pest",
+        "test:coverage": "XDEBUG_MODE=coverage vendor/bin/pest --coverage"
     }
 }
