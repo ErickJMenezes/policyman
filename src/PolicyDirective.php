@@ -19,13 +19,22 @@ class PolicyDirective
     ];
 
     /**
+     * @var array<int, non-empty-string>
+     */
+    private array $constraints = [];
+
+    /**
      * @param non-empty-string             $name
      * @param array<int, non-empty-string> $constraints
      */
     public function __construct(
         private string $name,
-        private array $constraints,
-    ) {}
+        array $constraints,
+    ) {
+        foreach ($constraints as $constraint) {
+            $this->add($constraint);
+        }
+    }
 
     /**
      * @return non-empty-string
