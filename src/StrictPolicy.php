@@ -13,8 +13,4 @@ namespace ErickJMenezes\Policyman;
  */
 final class StrictPolicy extends Policy
 {
-    public function __construct(Directive $name, array $constraints)
-    {
-        parent::__construct($name->value, $constraints);
-    }
 }

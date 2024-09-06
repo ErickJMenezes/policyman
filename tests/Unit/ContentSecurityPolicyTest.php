@@ -21,7 +21,7 @@ test('Finds a non existing policy in the policy array', function () {
     $policyDirectives = [];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
-    $nonExistingDirective = $policy->find('non-existing-policy');
+    $nonExistingDirective = $policy->find(Directive::BaseUri);
 
     expect($nonExistingDirective)->toBeNull();
 });
@@ -36,7 +36,7 @@ test('Finds a policy in the policy array with multiple policies', function () {
 
     $foundDirective = $policy->find(Directive::ImgSrc);
 
-    expect($foundDirective->directiveName())->toBe(Directive::ImgSrc->value);
+    expect($foundDirective->directive())->toBe(Directive::ImgSrc);
 });
 
 test('Adds a policy to the policy array', function () {
@@ -45,7 +45,7 @@ test('Adds a policy to the policy array', function () {
 
     $newDirective = new StrictPolicy(Directive::ScriptSrc, []);
     $policy->add($newDirective);
-    $directivesAfterAdd = $policy->policyDirectives();
+    $directivesAfterAdd = $policy->policies();
 
     expect($directivesAfterAdd)
         ->toBeArray()
@@ -64,7 +64,7 @@ test('Adds multiple policies to the policy array', function () {
     $policy
         ->add($newDirective1)
         ->add($newDirective2);
-    $directivesAfterAdd = $policy->policyDirectives();
+    $directivesAfterAdd = $policy->policies();
 
     expect($directivesAfterAdd)
         ->toBeArray()
@@ -75,6 +75,7 @@ test('Adds multiple policies to the policy array', function () {
         ->and($directivesAfterAdd[1])
         ->toBe($newDirective2);
 });
+
 test('Removes a policy from the policy array', function () {
     $policyDirectives = [
         new StrictPolicy(Directive::ScriptSrc, []),
@@ -83,14 +84,14 @@ test('Removes a policy from the policy array', function () {
     $policy = new ContentSecurityPolicy($policyDirectives);
 
     $policy->remove(Directive::ScriptSrc);
-    $directivesAfterRemove = $policy->policyDirectives();
+    $directivesAfterRemove = $policy->policies();
 
     expect($directivesAfterRemove)
         ->toBeArray()
         ->and($directivesAfterRemove)
         ->toHaveCount(1)
-        ->and($directivesAfterRemove[0]->directiveName())
-        ->toBe(Directive::ImgSrc->value);
+        ->and($directivesAfterRemove[0]->directive())
+        ->toBe(Directive::ImgSrc);
 });
 
 test('Removes a non-existing policy from the policy array', function () {
@@ -100,17 +101,17 @@ test('Removes a non-existing policy from the policy array', function () {
     ];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
-    $policy->remove('non-existing-policy');
-    $directivesAfterRemove = $policy->policyDirectives();
+    $policy->remove(Directive::DefaultSrc);
+    $directivesAfterRemove = $policy->policies();
 
     expect($directivesAfterRemove)
         ->toBeArray()
         ->and($directivesAfterRemove)
         ->toHaveCount(2)
-        ->and($directivesAfterRemove[0]->directiveName())
-        ->toBe(Directive::ScriptSrc->value)
-        ->and($directivesAfterRemove[1]->directiveName())
-        ->toBe(Directive::ImgSrc->value);
+        ->and($directivesAfterRemove[0]->directive())
+        ->toBe(Directive::ScriptSrc)
+        ->and($directivesAfterRemove[1]->directive())
+        ->toBe(Directive::ImgSrc);
 });
 
 test('Removes multiple policies from the policy array', function () {
@@ -124,12 +125,12 @@ test('Removes multiple policies from the policy array', function () {
     $policy
         ->remove(Directive::ScriptSrc)
         ->remove(Directive::ObjectSrc);
-    $directivesAfterRemove = $policy->policyDirectives();
+    $directivesAfterRemove = $policy->policies();
 
     expect($directivesAfterRemove)
         ->toBeArray()
         ->and($directivesAfterRemove)
         ->toHaveCount(1)
-        ->and($directivesAfterRemove[0]->directiveName())
-        ->toBe(Directive::ImgSrc->value);
+        ->and($directivesAfterRemove[0]->directive())
+        ->toBe(Directive::ImgSrc);
 });

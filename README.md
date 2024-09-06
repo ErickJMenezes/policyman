@@ -14,7 +14,7 @@ Let's jump into a simple use-case: We want to edit an existing CSP header to add
 use ErickJMenezes\Policyman\CSPParser;
 use ErickJMenezes\Policyman\CSPSerializer;
 use ErickJMenezes\Policyman\ContentSecurityPolicy;
-use ErickJMenezes\Policyman\StrictPolicy;
+use ErickJMenezes\Policyman\Policy;
 use ErickJMenezes\Policyman\Keyword;
 use ErickJMenezes\Policyman\Directive;
 
@@ -23,10 +23,10 @@ $header = "Content-Security-Policy: img-src 'self' data:; object-src 'none'";
 
 // Let's parse and edit this header to add more security policies.
 /** @var ContentSecurityPolicy $csp */
-$csp = (new CSPParser())->parseStrict($header);
+$csp = (new CSPParser())->parse($header);
 
 // Now we can add/edit/remove everything in the header.
-$csp->add(new StrictPolicy(Directive::ScriptSrc, [Keyword::Self, 'example.com']));
+$csp->add(new Policy(Directive::ScriptSrc, [Keyword::Self, 'example.com']));
 $csp->find(Directive::ImgSrc)->add('example.com');
 
 // Let's serialize it to a string.

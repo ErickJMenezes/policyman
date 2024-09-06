@@ -22,7 +22,7 @@ class CSPSerializer
      */
     public function serialize(array|ContentSecurityPolicy $policies): string
     {
-        $items = $policies instanceof ContentSecurityPolicy ? $policies->policyDirectives() : $policies;
+        $items = $policies instanceof ContentSecurityPolicy ? $policies->policies() : $policies;
         $stringPolicies = $this->transformPolicyDirectivesToSerializedFormat($items);
         return 'Content-Security-Policy: '.implode('; ', $stringPolicies);
     }
@@ -42,7 +42,14 @@ class CSPSerializer
      */
     private function serializePolicyDirective(Policy $policy): string
     {
-        $constraints = implode(' ', $policy->constraints());
-        return trim("{$policy->directiveName()} {$constraints}");
+        $constraints = implode(
+            ' ',
+            array_map(
+                fn(Keyword|string $constraint): string
+                    => is_string($constraint) ? $constraint : $constraint->escaped(),
+                $policy->constraints(),
+            ),
+        );
+        return trim("{$policy->directive()->value} {$constraints}");
     }
 }

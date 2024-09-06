@@ -4,12 +4,17 @@ declare(strict_types = 1);
 
 namespace ErickJMenezes\Policyman;
 
-abstract class Policy
+/**
+ * Class Policy
+ *
+ * It initializes the directive name and its associated constraints.
+ */
+class Policy
 {
     /**
-     * @var non-empty-string $name
+     * @var Directive $directive
      */
-    private string $name;
+    private Directive $directive;
 
     /**
      * @var array<int, non-empty-string>
@@ -17,12 +22,12 @@ abstract class Policy
     private array $constraints = [];
 
     /**
-     * @param non-empty-string                     $name
+     * @param Directive                            $directive
      * @param array<int, non-empty-string|Keyword> $constraints
      */
-    public function __construct(string $name, array $constraints)
+    public function __construct(Directive $directive, array $constraints)
     {
-        $this->name = $name;
+        $this->directive = $directive;
         foreach ($constraints as $constraint) {
             $this->add($constraint);
         }
@@ -39,20 +44,17 @@ abstract class Policy
         return $this;
     }
 
-    private function wrapConstraint(string|Keyword $constraint): string
+    private function wrapConstraint(string|Keyword $constraint): Keyword|string
     {
         $kw = $constraint instanceof Keyword
             ? $constraint
-            : Keyword::tryFrom($constraint);
-        return $kw?->escaped() ?? $constraint;
+            : Keyword::tryFrom(trim($constraint, "'\""));
+        return $kw ?? $constraint;
     }
 
-    /**
-     * @return non-empty-string
-     */
-    public function directiveName(): string
+    public function directive(): Directive
     {
-        return $this->name;
+        return $this->directive;
     }
 
     /**
@@ -77,7 +79,7 @@ abstract class Policy
     }
 
     /**
-     * @return array<int, non-empty-string>
+     * @return array<int, Keyword|non-empty-string>
      */
     public function constraints(): array
     {

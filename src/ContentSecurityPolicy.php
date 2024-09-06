@@ -10,38 +10,35 @@ namespace ErickJMenezes\Policyman;
 class ContentSecurityPolicy
 {
     /**
-     * @param array<int, Policy> $policyDirectives
+     * @param array<int, Policy> $policies
      */
-    public function __construct(private array $policyDirectives) {}
+    public function __construct(private array $policies) {}
 
     /**
      * Adds a policy to the policy array.
      *
-     * @param Policy $policyDirective The policy object to add.
+     * @param Policy $policy The policy object to add.
      *
      * @return $this
      */
-    public function add(Policy $policyDirective): self
+    public function add(Policy $policy): self
     {
-        $this->policyDirectives[] = $policyDirective;
+        $this->policies[] = $policy;
         return $this;
     }
 
     /**
      * Searches for a policy directive by its name within the list of policy directives.
      *
-     * @param non-empty-string|Directive $policyDirectiveName The name of the policy directive to find.
+     * @param Directive $directive The name of the policy directive to find.
      *
      * @return Policy|null The found policy directive or null if not found.
      */
-    public function find(string|Directive $policyDirectiveName): ?Policy
+    public function find(Directive $directive): ?Policy
     {
-        $policyDirectiveName = $policyDirectiveName instanceof Directive
-            ? $policyDirectiveName->value
-            : $policyDirectiveName;
-        foreach ($this->policyDirectives as $policyDirective) {
-            if ($policyDirective->directiveName() === $policyDirectiveName) {
-                return $policyDirective;
+        foreach ($this->policies as $policy) {
+            if ($policy->directive() === $directive) {
+                return $policy;
             }
         }
         return null;
@@ -50,27 +47,24 @@ class ContentSecurityPolicy
     /**
      * @return Policy[]
      */
-    public function policyDirectives(): array
+    public function policies(): array
     {
-        return $this->policyDirectives;
+        return $this->policies;
     }
 
     /**
      * Removes a policy with the given name from the policy array and reindexes the remaining policies.
      *
-     * @param non-empty-string $policyDirectiveName The name of the policy to remove.
+     * @param Directive $directive The name of the policy to remove.
      *
      * @return $this
      */
-    public function remove(string|Directive $policyDirectiveName): self
+    public function remove(Directive $directive): self
     {
-        $policyDirectiveName = $policyDirectiveName instanceof Directive
-            ? $policyDirectiveName->value
-            : $policyDirectiveName;
-        $this->policyDirectives = array_filter(
-            $this->policyDirectives,
-            static fn(Policy $policyDirective): bool
-                => $policyDirective->directiveName() !== $policyDirectiveName,
+        $this->policies = array_filter(
+            $this->policies,
+            static fn(Policy $policy): bool
+                => $policy->directive() !== $directive,
         );
         $this->reindexPolicies();
         return $this;
@@ -78,6 +72,6 @@ class ContentSecurityPolicy
 
     private function reindexPolicies(): void
     {
-        $this->policyDirectives = array_values($this->policyDirectives);
+        $this->policies = array_values($this->policies);
     }
 }
