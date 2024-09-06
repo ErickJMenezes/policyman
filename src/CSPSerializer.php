@@ -16,7 +16,7 @@ class CSPSerializer
      * Serializes a ContentSecurityPolicy object into a string format suitable for use
      * in HTTP headers.
      *
-     * @param ContentSecurityPolicy|PolicyDirective[] $policies The policies to serialize.
+     * @param ContentSecurityPolicy|Policy[] $policies The policies to serialize.
      *
      * @return non-empty-string The serialized Content-Security-Policy header string.
      */
@@ -28,7 +28,7 @@ class CSPSerializer
     }
 
     /**
-     * @param PolicyDirective[] $policies
+     * @param Policy[] $policies
      *
      * @return array<int, non-empty-string>
      */
@@ -40,7 +40,7 @@ class CSPSerializer
     /**
      * @return non-empty-string
      */
-    private function serializePolicyDirective(PolicyDirective $policy): string
+    private function serializePolicyDirective(Policy $policy): string
     {
         $constraints = implode(' ', $policy->constraints());
         return trim("{$policy->directiveName()} {$constraints}");

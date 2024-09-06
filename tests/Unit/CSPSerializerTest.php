@@ -4,17 +4,18 @@ namespace Tests\Unit;
 
 use ErickJMenezes\Policyman\ContentSecurityPolicy;
 use ErickJMenezes\Policyman\CSPSerializer;
-use ErickJMenezes\Policyman\PolicyDirective;
+use ErickJMenezes\Policyman\Directive;
+use ErickJMenezes\Policyman\StrictPolicy;
 
 test('it correctly serializes PolicyDirective', function () {
     $cspSerializer = new CSPSerializer();
 
     // create policies
     $policies = [];
-    $directive1 = new PolicyDirective('default-src', ['self']);
+    $directive1 = new StrictPolicy(Directive::DefaultSrc, ['self']);
     $policies[] = $directive1;
 
-    $directive2 = new PolicyDirective('script-src', ['self', 'static.example.com']);
+    $directive2 = new StrictPolicy(Directive::ScriptSrc, ['self', 'static.example.com']);
     $policies[] = $directive2;
 
     $result = $cspSerializer->serialize($policies);
@@ -28,7 +29,7 @@ test('it correctly serializes empty PolicyDirective', function () {
 
     // create policies
     $policies = [];
-    $directive1 = new PolicyDirective('default-src', []);
+    $directive1 = new StrictPolicy(Directive::DefaultSrc, []);
     $policies[] = $directive1;
 
     $result = $cspSerializer->serialize($policies);
@@ -42,7 +43,7 @@ test('it correctly serializes a CSP object', function () {
 
     // create policies
     $policies = [];
-    $directive1 = new PolicyDirective('default-src', []);
+    $directive1 = new StrictPolicy(Directive::DefaultSrc, []);
     $policies[] = $directive1;
 
     $result = $cspSerializer->serialize(new ContentSecurityPolicy($policies));

@@ -10,18 +10,18 @@ namespace ErickJMenezes\Policyman;
 class ContentSecurityPolicy
 {
     /**
-     * @param array<int, PolicyDirective> $policyDirectives
+     * @param array<int, Policy> $policyDirectives
      */
     public function __construct(private array $policyDirectives) {}
 
     /**
      * Adds a policy to the policy array.
      *
-     * @param PolicyDirective $policyDirective The policy object to add.
+     * @param Policy $policyDirective The policy object to add.
      *
      * @return $this
      */
-    public function add(PolicyDirective $policyDirective): self
+    public function add(Policy $policyDirective): self
     {
         $this->policyDirectives[] = $policyDirective;
         return $this;
@@ -30,12 +30,15 @@ class ContentSecurityPolicy
     /**
      * Searches for a policy directive by its name within the list of policy directives.
      *
-     * @param non-empty-string $policyDirectiveName The name of the policy directive to find.
+     * @param non-empty-string|Directive $policyDirectiveName The name of the policy directive to find.
      *
-     * @return PolicyDirective|null The found policy directive or null if not found.
+     * @return Policy|null The found policy directive or null if not found.
      */
-    public function find(string $policyDirectiveName): ?PolicyDirective
+    public function find(string|Directive $policyDirectiveName): ?Policy
     {
+        $policyDirectiveName = $policyDirectiveName instanceof Directive
+            ? $policyDirectiveName->value
+            : $policyDirectiveName;
         foreach ($this->policyDirectives as $policyDirective) {
             if ($policyDirective->directiveName() === $policyDirectiveName) {
                 return $policyDirective;
@@ -45,7 +48,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * @return PolicyDirective[]
+     * @return Policy[]
      */
     public function policyDirectives(): array
     {
@@ -59,11 +62,14 @@ class ContentSecurityPolicy
      *
      * @return $this
      */
-    public function remove(string $policyDirectiveName): self
+    public function remove(string|Directive $policyDirectiveName): self
     {
+        $policyDirectiveName = $policyDirectiveName instanceof Directive
+            ? $policyDirectiveName->value
+            : $policyDirectiveName;
         $this->policyDirectives = array_filter(
             $this->policyDirectives,
-            static fn(PolicyDirective $policyDirective): bool
+            static fn(Policy $policyDirective): bool
                 => $policyDirective->directiveName() !== $policyDirectiveName,
         );
         $this->reindexPolicies();
