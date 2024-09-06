@@ -9,7 +9,7 @@ use Throwable;
 
 class UnknownDirectiveException extends InvalidArgumentException
 {
-    public function __construct(string $directiveName = "", Throwable $previous = null)
+    public function __construct(string $directiveName, Throwable $previous = null)
     {
         parent::__construct(
             "The directive [$directiveName] does not exist. And is not supported by browsers.",
