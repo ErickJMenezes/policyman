@@ -4,17 +4,22 @@ declare(strict_types = 1);
 
 namespace ErickJMenezes\Policyman;
 
+/**
+ * A class that parses Content-Security-Policy (CSP) headers into an instance of ContentSecurityPolicy.
+ */
 class CSPParser
 {
     /**
-     * Parses the given CSP header string and returns a ContentSecurityPolicy instance.
+     * Parses a Content Security Policy header and creates a ContentSecurityPolicy object.
      *
-     * @param string $header
+     * @param string $header  The CSP header string to be parsed.
+     * @param bool   $loosely If true, the header will be parsed using loose rules.
      *
-     * @return ContentSecurityPolicy
+     * @return ContentSecurityPolicy The parsed Content Security Policy object.
      */
-    public function parseHeader(string $header): ContentSecurityPolicy
+    public function parseHeader(string $header, bool $loosely = false): ContentSecurityPolicy
     {
+        $newPolicyDirective = $loosely ? $this->newLoosePolicyDirective(...) : $this->newPolicyDirective(...);
         $header = $this->removeContentSecurityPolicyPrefix($header);
 
         $directives = [];
@@ -25,10 +30,7 @@ class CSPParser
                 continue;
             }
             $directive = explode(' ', trim($part));
-            $directives[] = new PolicyDirective(
-                $directive[0],
-                array_values(array_splice($directive, 1)),
-            );
+            $directives[] = $newPolicyDirective($directive);
         }
 
         return new ContentSecurityPolicy($directives);
@@ -44,5 +46,31 @@ class CSPParser
     private function removeContentSecurityPolicyPrefix(string $header): string
     {
         return preg_replace('/^Content-Security-Policy:\s*/i', '', $header);
+    }
+
+    /**
+     * @param array<int, string> $directive
+     *
+     * @return PolicyDirective
+     */
+    private function newPolicyDirective(array $directive): PolicyDirective
+    {
+        return new PolicyDirective(
+            $directive[0],
+            array_values(array_splice($directive, 1)),
+        );
+    }
+
+    /**
+     * @param array<int, string> $directive
+     *
+     * @return LoosePolicyDirective
+     */
+    private function newLoosePolicyDirective(array $directive): LoosePolicyDirective
+    {
+        return new LoosePolicyDirective(
+            $directive[0],
+            array_values(array_splice($directive, 1)),
+        );
     }
 }

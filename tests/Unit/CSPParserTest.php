@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use ErickJMenezes\Policyman\ContentSecurityPolicy;
 use ErickJMenezes\Policyman\CSPParser;
+use ErickJMenezes\Policyman\LoosePolicyDirective;
 use ErickJMenezes\Policyman\PolicyDirective;
 
 test('parseHeader method should return a ContentSecurityPolicy instance using string', function () {
@@ -45,7 +46,7 @@ test('parseHeader correctly handles CSP directives with multiple parts', functio
         ->toBeInstanceOf(PolicyDirective::class);
 });
 
-test('parseHeader correctly handles empty or invalid CSP headers', function () {
+test('parseHeader correctly handles empty CSP headers', function () {
     $header = '';
     $cspParser = new CSPParser();
     $csp = $cspParser->parseHeader($header);
@@ -55,4 +56,18 @@ test('parseHeader correctly handles empty or invalid CSP headers', function () {
         ->and($csp->policyDirectives())
         ->toBeArray()
         ->toBe([]);
+});
+
+test('parseHeader can parse invalid CSP directives', function () {
+    $header = "Content-Security-Policy: img-source 'self'";
+    $cspParser = new CSPParser();
+    $csp = $cspParser->parseHeader($header, true);
+
+    expect($csp)
+        ->toBeInstanceOf(ContentSecurityPolicy::class)
+        ->and($csp->policyDirectives())
+        ->toBeArray()
+        ->toHaveCount(1)
+        ->and($csp->find('img-source'))
+        ->toBeInstanceOf(LoosePolicyDirective::class);
 });

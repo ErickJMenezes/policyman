@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace ErickJMenezes\Policyman;
 
+use ErickJMenezes\Policyman\Exceptions\UnknownDirectiveException;
+
 class PolicyDirective
 {
     private const array KEYWORDS = [
@@ -18,6 +20,48 @@ class PolicyDirective
         'wasm-unsafe-eval',
     ];
 
+    private const array ALLOWED_DIRECTIVES = [
+        // Fetch directives
+        'child-src',
+        'connect-src',
+        'default-src',
+        'fenced-frame-src',
+        'font-src',
+        'frame-src',
+        'img-src',
+        'manifest-src',
+        'media-src',
+        'object-src',
+        'prefetch-src',
+        'script-src',
+        'script-src',
+        'script-src-attr',
+        'style-src',
+        'style-src-elem',
+        'style-src-attr',
+        'worker-src',
+        // Document directives
+        'base-uri',
+        'sandbox',
+        // Navigation directives
+        'form-action',
+        'frame-ancestors',
+        // Reporting directives
+        'report-to',
+        // Other directives
+        'require-trusted-types-for',
+        'trusted-types',
+        'upgrade-insecure-requests',
+        // Deprecated directives
+        'block-all-mixed-content',
+        'report-uri',
+    ];
+
+    /**
+     * @var non-empty-string $name
+     */
+    private string $name;
+
     /**
      * @var array<int, non-empty-string>
      */
@@ -27,10 +71,10 @@ class PolicyDirective
      * @param non-empty-string             $name
      * @param array<int, non-empty-string> $constraints
      */
-    public function __construct(
-        private string $name,
-        array $constraints,
-    ) {
+    public function __construct(string $name, array $constraints)
+    {
+        $this->validateDirectiveName($name);
+        $this->name = $name;
         foreach ($constraints as $constraint) {
             $this->add($constraint);
         }
@@ -51,8 +95,16 @@ class PolicyDirective
      */
     public function rename(string $newName): self
     {
+        $this->validateDirectiveName($newName);
         $this->name = $newName;
         return $this;
+    }
+
+    protected function validateDirectiveName(string $name): void
+    {
+        if (!in_array($name, self::ALLOWED_DIRECTIVES, true)) {
+            throw new UnknownDirectiveException($name);
+        }
     }
 
     /**
