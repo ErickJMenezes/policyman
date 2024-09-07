@@ -12,10 +12,10 @@ test('it correctly serializes PolicyDirective', function () {
 
     // create policies
     $policies = [];
-    $directive1 = new Policy(Directive::DefaultSrc, ['self']);
+    $directive1 = new Policy(Directive::DefaultSrc, ["'self'"]);
     $policies[] = $directive1;
 
-    $directive2 = new Policy(Directive::ScriptSrc, ['self', 'static.example.com']);
+    $directive2 = new Policy(Directive::ScriptSrc, ["'self'", 'static.example.com']);
     $policies[] = $directive2;
 
     $result = $cspSerializer->serialize($policies);

@@ -8,7 +8,7 @@ use ErickJMenezes\Policyman\Directive;
 
 test('can add a constraint', function () {
     $policy = new Policy(Directive::DefaultSrc, []);
-    $policy->add('self')
+    $policy->add("'self'")
         ->add(Keyword::ReportSample);
 
     expect($policy->constraints())
@@ -32,7 +32,7 @@ test('can add a non-keyword constraint', function () {
 
 test('can remove a keyword constraint', function () {
     $policy = new Policy(Directive::DefaultSrc, ["'self'"]);
-    $policy->remove('self');
+    $policy->remove("'self'");
 
     expect($policy->constraints())
         ->toBeEmpty();

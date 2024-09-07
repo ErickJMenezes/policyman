@@ -4,13 +4,13 @@ namespace Tests\Unit;
 
 use ErickJMenezes\Policyman\ContentSecurityPolicy;
 use ErickJMenezes\Policyman\Directive;
-use ErickJMenezes\Policyman\StrictPolicy;
+use ErickJMenezes\Policyman\Policy;
 
 test('Finds a policy in the policy array', function () {
     $policyDirectives = [];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
-    $newDirective = new StrictPolicy(Directive::ScriptSrc, []);
+    $newDirective = new Policy(Directive::ScriptSrc, []);
     $policy->add($newDirective);
     $foundDirective = $policy->find(Directive::ScriptSrc);
 
@@ -28,9 +28,9 @@ test('Finds a non existing policy in the policy array', function () {
 
 test('Finds a policy in the policy array with multiple policies', function () {
     $policyDirectives = [
-        new StrictPolicy(Directive::ScriptSrc, []),
-        new StrictPolicy(Directive::ImgSrc, []),
-        new StrictPolicy(Directive::ObjectSrc, []),
+        new Policy(Directive::ScriptSrc, []),
+        new Policy(Directive::ImgSrc, []),
+        new Policy(Directive::ObjectSrc, []),
     ];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
@@ -43,7 +43,7 @@ test('Adds a policy to the policy array', function () {
     $policyDirectives = [];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
-    $newDirective = new StrictPolicy(Directive::ScriptSrc, []);
+    $newDirective = new Policy(Directive::ScriptSrc, []);
     $policy->add($newDirective);
     $directivesAfterAdd = $policy->policies();
 
@@ -59,8 +59,8 @@ test('Adds multiple policies to the policy array', function () {
     $policyDirectives = [];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
-    $newDirective1 = new StrictPolicy(Directive::ScriptSrc, []);
-    $newDirective2 = new StrictPolicy(Directive::ImgSrc, []);
+    $newDirective1 = new Policy(Directive::ScriptSrc, []);
+    $newDirective2 = new Policy(Directive::ImgSrc, []);
     $policy
         ->add($newDirective1)
         ->add($newDirective2);
@@ -78,8 +78,8 @@ test('Adds multiple policies to the policy array', function () {
 
 test('Removes a policy from the policy array', function () {
     $policyDirectives = [
-        new StrictPolicy(Directive::ScriptSrc, []),
-        new StrictPolicy(Directive::ImgSrc, []),
+        new Policy(Directive::ScriptSrc, []),
+        new Policy(Directive::ImgSrc, []),
     ];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
@@ -96,8 +96,8 @@ test('Removes a policy from the policy array', function () {
 
 test('Removes a non-existing policy from the policy array', function () {
     $policyDirectives = [
-        new StrictPolicy(Directive::ScriptSrc, []),
-        new StrictPolicy(Directive::ImgSrc, []),
+        new Policy(Directive::ScriptSrc, []),
+        new Policy(Directive::ImgSrc, []),
     ];
     $policy = new ContentSecurityPolicy($policyDirectives);
 
@@ -116,9 +116,9 @@ test('Removes a non-existing policy from the policy array', function () {
 
 test('Removes multiple policies from the policy array', function () {
     $policyDirectives = [
-        new StrictPolicy(Directive::ScriptSrc, []),
-        new StrictPolicy(Directive::ImgSrc, []),
-        new StrictPolicy(Directive::ObjectSrc, []),
+        new Policy(Directive::ScriptSrc, []),
+        new Policy(Directive::ImgSrc, []),
+        new Policy(Directive::ObjectSrc, []),
     ];
     $policy = new ContentSecurityPolicy($policyDirectives);
 

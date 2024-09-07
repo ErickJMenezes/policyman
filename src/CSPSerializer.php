@@ -46,7 +46,7 @@ class CSPSerializer
             ' ',
             array_map(
                 fn(Keyword|string $constraint): string
-                    => is_string($constraint) ? $constraint : $constraint->escaped(),
+                    => is_string($constraint) ? $constraint : $constraint->value,
                 $policy->constraints(),
             ),
         );

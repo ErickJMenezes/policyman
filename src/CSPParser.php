@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace ErickJMenezes\Policyman;
 
+use ErickJMenezes\PolicymanParser\Parser;
+use RuntimeException;
 use ValueError;
 
 /**
@@ -21,45 +23,12 @@ class CSPParser
      */
     public function parse(string $header): ContentSecurityPolicy
     {
-        $header = $this->removeContentSecurityPolicyPrefix($header);
-
-        $directives = [];
-        $parts = explode(';', $header);
-
-        foreach ($parts as $part) {
-            if (empty($part)) {
-                continue;
-            }
-            $directive = explode(' ', trim($part));
-            $directives[] = $this->newStrictPolicy($directive);
+        $lexer = new CSPLexer($header);
+        $parser = new Parser($lexer);
+        $success = $parser->parse();
+        if (!$success) {
+            throw new RuntimeException(implode(' ', $lexer->getErrorMessages()));
         }
-
-        return new ContentSecurityPolicy($directives);
-    }
-
-    /**
-     * Removes the 'Content-Security-Policy:' prefix from the given header string.
-     *
-     * @param non-empty-string $header The header string that may contain the 'Content-Security-Policy:' prefix.
-     *
-     * @return non-empty-string The header string without the 'Content-Security-Policy:' prefix.
-     */
-    private function removeContentSecurityPolicyPrefix(string $header): string
-    {
-        return preg_replace('/^Content-Security-Policy:\s*/i', '', $header);
-    }
-
-    /**
-     * @param array<int, string> $directive
-     *
-     * @return Policy
-     * @throws ValueError If some header directive is not in {@see Directive} enum.
-     */
-    private function newStrictPolicy(array $directive): Policy
-    {
-        return new Policy(
-            Directive::from($directive[0]),
-            array_values(array_splice($directive, 1)),
-        );
+        return $parser->getCsp();
     }
 }

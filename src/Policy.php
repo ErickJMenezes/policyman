@@ -48,7 +48,7 @@ class Policy
     {
         $kw = $constraint instanceof Keyword
             ? $constraint
-            : Keyword::tryFrom(trim($constraint, "'\""));
+            : Keyword::tryFrom($constraint);
         return $kw ?? $constraint;
     }
 

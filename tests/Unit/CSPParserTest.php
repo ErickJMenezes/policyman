@@ -7,10 +7,10 @@ use ErickJMenezes\Policyman\CSPParser;
 use ErickJMenezes\Policyman\Directive;
 use ErickJMenezes\Policyman\Keyword;
 use ErickJMenezes\Policyman\Policy;
-use ValueError;
+use RuntimeException;
 
 test('parseHeader method should return a ContentSecurityPolicy instance using string', function () {
-    $header = 'Content-Security-Policy: script-src \'self\'';
+    $header = "Content-Security-Policy: script-src 'self'";
     $cspParser = new CSPParser();
     $csp = $cspParser->parse($header);
 
@@ -22,7 +22,6 @@ test('parseHeader method should return a ContentSecurityPolicy instance using st
         ->toBe(Directive::ScriptSrc)
         ->and($csp->find(Directive::ScriptSrc)->constraints())
         ->toBeArray()
-        ->not->toBeEmpty()
         ->toContain(Keyword::Self)
     ;
 });
@@ -53,16 +52,14 @@ test('parseHeader correctly handles CSP directives with multiple parts', functio
         ->toBeInstanceOf(Policy::class);
 });
 
-test('parseHeader correctly handles empty CSP headers', function () {
-    $header = '';
+test('parseHeader correctly handles invalid csp headers', function () {
+    $header = "Content";
     $cspParser = new CSPParser();
-    $csp = $cspParser->parse($header);
-
-    expect($csp)
-        ->toBeInstanceOf(ContentSecurityPolicy::class)
-        ->and($csp->policies())
-        ->toBeArray()
-        ->toBe([]);
+    expect(fn() => $cspParser->parse($header))
+        ->toThrow(
+            RuntimeException::class,
+            'Syntax error. Unexpected T_USER_DEFINED_KEYWORD at index 0. Check value "Content".',
+        );
 });
 
 test('parseHeader fails to parse when invalid directive is present', function () {
@@ -71,7 +68,7 @@ test('parseHeader fails to parse when invalid directive is present', function ()
 
     expect(fn() => $cspParser->parse($header))
         ->toThrow(
-            ValueError::class,
-            'img-source" is not a valid backing value for enum ErickJMenezes\Policyman\Directive',
+            RuntimeException::class,
+            'Syntax error. Unexpected T_USER_DEFINED_KEYWORD at index 1. Check value "img-source".',
         );
 });

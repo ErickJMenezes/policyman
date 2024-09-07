@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1306781860c7f26b8ab14f526498a49",
+    "content-hash": "4843d287a04516afa083f5cfd823d9c7",
     "packages": [],
     "packages-dev": [
         {
@@ -338,6 +338,51 @@
                 "source": "https://github.com/Jean85/pretty-package-versions/tree/2.0.6"
             },
             "time": "2024-03-08T09:58:59+00:00"
+        },
+        {
+            "name": "mrsuh/php-bison-skeleton",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mrsuh/php-bison-skeleton.git",
+                "reference": "3aef7e150eb1c069c81150edf4768c9619f08159"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mrsuh/php-bison-skeleton/zipball/3aef7e150eb1c069c81150edf4768c9619f08159",
+                "reference": "3aef7e150eb1c069c81150edf4768c9619f08159",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.6",
+                "symfony/process": "^5.4"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Anton Sukhachev",
+                    "email": "mrsuh6@gmail.com"
+                }
+            ],
+            "description": "PHP skeleton for Bison",
+            "keywords": [
+                "Skeleton",
+                "bison",
+                "parser-generator",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/mrsuh/php-bison-skeleton/issues",
+                "source": "https://github.com/mrsuh/php-bison-skeleton/tree/1.2.0"
+            },
+            "time": "2023-05-07T15:22:19+00:00"
         },
         {
             "name": "myclabs/deep-copy",
