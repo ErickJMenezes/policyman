@@ -1,6 +1,6 @@
 # Policyman 👮
 
-A Content Security Policy parser and builder.
+A Content-Security-Policy (CSP) header parser and builder.
 
 ## Instalation
 ```shell
@@ -43,4 +43,12 @@ $csp->find(Directive::ImgSrc)->add('example.com');
 $newHeader = Policyman::serialize($csp);
 
 // Content-Security-Policy: img-src 'self' data: example.com; object-src 'none'; script-src 'self' example.com
+```
+
+## Validation:
+```php
+use ErickJMenezes\Policyman\Policyman;
+
+Policyman::validate("Content-Security-Policy: default_src 'self'"); // false
+Policyman::validate("Content-Security-Policy: default-src 'self'"); // true
 ```

@@ -16,6 +16,12 @@ test('it can validate a given header', function (string $header, bool $isValid) 
         ->toBe($isValid);
 })->with([
     ["Content-Security-Policy: default-src 'self'", true],
+    ["Content-Security-Policy: default_src 'self'", false],
+    ["Content-Security-Policy: default-src 'self';", true],
+    ["Content-Security-Policy: default-src 'self' img-src 'self'", false],
     ["Content-Security-Policy default-src 'self'", false],
     ["Content-Security-Policy default-src 'self; img-src 'self'", false],
+    ["Content-Security-Policy: default src 'self'", false],
+    ["Content-Security-Policy: 'self'", false],
+    ["Content-Security-Policy: default-src; 'self'", false]
 ]);

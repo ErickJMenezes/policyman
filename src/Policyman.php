@@ -34,11 +34,11 @@ final class Policyman
     }
 
     /**
-     * Validates the given Content-Security-Policy (CSP) header structure.
+     * Validates the given Content-Security-Policy (CSP) grammar.
      *
      * @param string $header The Content-Security-Policy (CSP) header to validate.
      *
-     * @return bool True if the header is structurally valid, false otherwise.
+     * @return bool True if the header is grammatically valid, false otherwise.
      */
     public static function validate(string $header): bool
     {
