@@ -10,6 +10,7 @@ composer install erickjmenezes/policyman
 ## Building a CSP header:
 ```php
 use ErickJMenezes\Policyman\Policyman;
+use ErickJMenezes\Policyman\Keyword;
 
 $header = Policyman::builder()
     ->defaultSrc([Keyword::Self])
