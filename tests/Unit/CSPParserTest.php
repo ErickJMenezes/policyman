@@ -5,9 +5,9 @@ namespace Tests\Unit;
 use ErickJMenezes\Policyman\ContentSecurityPolicy;
 use ErickJMenezes\Policyman\CSPParser;
 use ErickJMenezes\Policyman\Directive;
+use ErickJMenezes\Policyman\InvalidContentSecurityPolicyException;
 use ErickJMenezes\Policyman\Keyword;
 use ErickJMenezes\Policyman\Policy;
-use RuntimeException;
 
 test('parseHeader method should return a ContentSecurityPolicy instance using string', function () {
     $header = "Content-Security-Policy: script-src 'self'";
@@ -57,7 +57,7 @@ test('parseHeader correctly handles invalid csp headers', function () {
     $cspParser = new CSPParser();
     expect(fn() => $cspParser->parse($header))
         ->toThrow(
-            RuntimeException::class,
+            InvalidContentSecurityPolicyException::class,
             'Syntax error. Unexpected T_USER_DEFINED_KEYWORD at index 0. Check value "Content".',
         );
 });
@@ -68,7 +68,7 @@ test('parseHeader fails to parse when invalid directive is present', function ()
 
     expect(fn() => $cspParser->parse($header))
         ->toThrow(
-            RuntimeException::class,
+            InvalidContentSecurityPolicyException::class,
             'Syntax error. Unexpected T_USER_DEFINED_KEYWORD at index 1. Check value "img-source".',
         );
 });

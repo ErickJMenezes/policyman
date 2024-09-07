@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ErickJMenezes\Policyman;
 
 use ErickJMenezes\PolicymanParser\LexerInterface;
